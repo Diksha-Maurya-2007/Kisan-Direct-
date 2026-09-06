@@ -1,25 +1,45 @@
-# KisanDirect MVP starter
+# KisanDirect 🌾
 
-This is the first, homepage-only stage of the Smart India Hackathon prototype.
+KisanDirect is an **AI-powered agricultural marketplace** designed to connect farmers directly with bulk buyers.  
+The platform reduces intermediaries and enhances transparency by enabling crop listing, AI-assisted quality grading, smart farmer–buyer matching, mandi price comparison, shared logistics, and order tracking.
 
-## Run it locally
+---
 
-1. Install the current Node.js LTS release from [nodejs.org](https://nodejs.org/). It includes `npm`.
-2. Open this folder in VS Code.
-3. Open the VS Code terminal and run:
+## 📌 Project Overview
+This repository contains the **MVP prototype (homepage-only)** developed for the **Smart India Hackathon**.  
+Future modules and features will be added under `src/features/`.
 
-   ```powershell
-   npm install
-   npm run dev
-   ```
+---
 
-4. Open the local address shown in the terminal (usually `http://localhost:5173`).
+## 🛠️ Technology Stack
+- **Frontend Framework:** React (with Vite for fast builds)  
+- **Styling:** Tailwind CSS  
+- **Package Manager:** npm  
+- **Development Environment:** Visual Studio Code  
 
-## Folder guide
+---
 
-- `src/App.jsx` — homepage content and React component
-- `src/index.css` — Tailwind entry point and a small custom homepage style
-- `assets/kisan-direct-logo.png` — supplied KisanDirect logo
-- `vite.config.js` — Vite, React and Tailwind configuration
+## 📂 Repository Structure
+- `src/App.jsx` → Main homepage component  
+- `src/index.css` → Tailwind entry point and custom styles  
+- `assets/` → Project assets (e.g., logo)  
+- `vite.config.js` → Vite and Tailwind configuration  
+- `src/features/` → Placeholder for upcoming modules  
 
-Future modules can be added under `src/features/` as the MVP grows.
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+- Install the latest **Node.js LTS** from [nodejs.org](https://nodejs.org).
+
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/Diksha-Maurya-2007/Kisan-Direct-.git
+
+# Navigate into the project folder
+cd Kisan-Direct-
+
+# Install dependencies
+npm install
