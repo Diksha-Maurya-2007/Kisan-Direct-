@@ -1260,9 +1260,6 @@ a { text-decoration: none; }
   .vehicle-options { grid-template-columns: 1fr; }
 }
 
-/* ─────────────────────────────────────────────────────
-   Demo Banner
-───────────────────────────────────────────────────── */
 .demo-banner {
   margin-top: 20px;
   background: linear-gradient(135deg, #fffbeb, #fff8dc);
@@ -1345,9 +1342,6 @@ a { text-decoration: none; }
   background: var(--primary-dark);
 }
 
-/* ─────────────────────────────────────────────────────
-   Phone input
-───────────────────────────────────────────────────── */
 .phone-field-wrap {
   margin-top: 4px;
 }
@@ -1389,9 +1383,6 @@ a { text-decoration: none; }
   color: var(--text);
 }
 
-/* ─────────────────────────────────────────────────────
-   OTP input
-───────────────────────────────────────────────────── */
 .otp-input-wrap {
   margin-top: 20px;
 }
@@ -1416,9 +1407,6 @@ a { text-decoration: none; }
   font-size: 14px;
 }
 
-/* ─────────────────────────────────────────────────────
-   Send OTP / Verify button
-───────────────────────────────────────────────────── */
 .send-otp-btn {
   margin-top: 20px;
   width: 100%;
@@ -1436,9 +1424,6 @@ a { text-decoration: none; }
   cursor: not-allowed;
 }
 
-/* ─────────────────────────────────────────────────────
-   Error message
-───────────────────────────────────────────────────── */
 .auth-error {
   margin-top: 12px;
   padding: 10px 14px;
@@ -1450,9 +1435,6 @@ a { text-decoration: none; }
   font-weight: 600;
 }
 
-/* ─────────────────────────────────────────────────────
-   Resend row
-───────────────────────────────────────────────────── */
 .resend-row {
   margin-top: 16px;
   text-align: center;
@@ -1471,9 +1453,6 @@ a { text-decoration: none; }
   text-underline-offset: 3px;
 }
 
-/* ─────────────────────────────────────────────────────
-   Spinner
-───────────────────────────────────────────────────── */
 .spinner {
   display: inline-block;
   width: 16px;
@@ -1488,9 +1467,6 @@ a { text-decoration: none; }
   to { transform: rotate(360deg); }
 }
 
-/* ─────────────────────────────────────────────────────
-   Profile form (step after OTP)
-───────────────────────────────────────────────────── */
 .profile-form-grid {
   display: grid;
   gap: 16px;
@@ -1502,16 +1478,12 @@ a { text-decoration: none; }
   margin-left: 2px;
 }
 
-/* ─────────────────────────────────────────────────────
-   LocationPicker
-───────────────────────────────────────────────────── */
 .location-picker {
   position: relative;
   display: grid;
   gap: 10px;
 }
 
-/* "Use my current location" pill */
 .current-loc-btn {
   display: inline-flex;
   align-items: center;
@@ -1537,7 +1509,6 @@ a { text-decoration: none; }
   cursor: not-allowed;
 }
 
-/* Search input row */
 .loc-input-wrap {
   display: flex;
   align-items: center;
@@ -1586,7 +1557,6 @@ a { text-decoration: none; }
   to   { opacity: 1;   transform: scale(1.2); }
 }
 
-/* Suggestions dropdown */
 .location-dropdown {
   position: absolute;
   top: 100%;
@@ -1630,7 +1600,6 @@ a { text-decoration: none; }
   line-height: 1.4;
 }
 
-/* GPS error message */
 .loc-error {
   margin: 0;
   color: var(--error);
@@ -1638,30 +1607,23 @@ a { text-decoration: none; }
   font-weight: 600;
 }
 
-/* Smaller spinner variant for GPS button */
 .spinner-sm {
   width: 12px;
   height: 12px;
   border-width: 2px;
 }
 
-/* ═══════════════════════════════════════════════════════
-   Map Modal — Swiggy-style fullscreen location picker
-   ═══════════════════════════════════════════════════════ */
-
-/* Full-screen overlay */
 .map-overlay {
   position: fixed;
   inset: 0;
   z-index: 200;
   background: rgba(10, 20, 12, 0.55);
   display: flex;
-  align-items: flex-end;        /* slide up from bottom on mobile */
+  align-items: flex-end;        
   justify-content: center;
   backdrop-filter: blur(2px);
 }
 
-/* Modal panel */
 .map-modal {
   width: 100%;
   max-width: 620px;
@@ -1679,7 +1641,6 @@ a { text-decoration: none; }
   .map-modal    { border-radius: 20px; height: 90vh; }
 }
 
-/* ── Header (search + close) ── */
 .map-header {
   display: flex;
   align-items: center;
@@ -1744,9 +1705,8 @@ a { text-decoration: none; }
 }
 .map-close-btn:hover { background: #e8f0e8; }
 
-/* Search suggestions */
 .map-suggestions {
-  /* In-flow flex child — pushes map down, never overlaps search input */
+  
   flex-shrink: 0;
   background: #fff;
   border-bottom: 1px solid var(--border);
@@ -1771,7 +1731,6 @@ a { text-decoration: none; }
 }
 .map-suggestions li:hover { background: var(--panel-soft); }
 
-/* ── Map area ── */
 .map-area-wrap {
   flex: 1;
   position: relative;
@@ -1783,7 +1742,6 @@ a { text-decoration: none; }
   height: 100%;
 }
 
-/* Fixed center pin (Swiggy-style — map moves, pin stays) */
 .map-center-pin {
   position: absolute;
   top: 50%;
@@ -1817,7 +1775,6 @@ a { text-decoration: none; }
   filter: blur(1px);
 }
 
-/* Small hint shown at bottom of map tile */
 .map-zoom-hint {
   position: absolute;
   bottom: 10px;
@@ -1832,7 +1789,6 @@ a { text-decoration: none; }
   z-index: 10;
   white-space: nowrap;
 }
-
 
 .map-bottom {
   padding: 14px 16px 20px;
@@ -1903,7 +1859,6 @@ a { text-decoration: none; }
 }
 .map-confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── LocationPicker trigger (on form) ── */
 .location-picker { display: grid; gap: 0; }
 
 .loc-display-row {
@@ -1950,7 +1905,6 @@ a { text-decoration: none; }
   transform: scale(1.03);
 }
 
-/* ── Mandi Prices (data.gov.in Agmarknet) ── */
 .mandi-status-bar {
   display: flex;
   justify-content: space-between;

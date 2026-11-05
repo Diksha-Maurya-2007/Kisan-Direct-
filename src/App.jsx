@@ -5,7 +5,6 @@ import { assessCropQuality } from './services/aiQualityAssessment.js';
 import { fetchLiveMandiPrices } from './services/mandiPrices.js';
 import Leaflet from 'leaflet';
 
-// Fix Leaflet default marker icons (broken by Vite's asset handling)
 delete Leaflet.Icon.Default.prototype._getIconUrl;
 Leaflet.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -15,8 +14,6 @@ Leaflet.Icon.Default.mergeOptions({
 
 const LOGO = '/assets/kisan-direct-logo.png';
 
-// Each buyer match is an individual farm with enough stock for the requested
-// quantity. Smaller lots are intentionally never combined to fulfil a match.
 const F = [
   ['Rajesh Singh', 'Lucknow', 400, 26, 'Grade A'],
   ['Meena Devi', 'Kanpur', 350, 25, 'Grade A'],
@@ -446,19 +443,14 @@ function App() {
   );
 }
 
-// ─────────────────────────────────────────────────────────
-// Shared Nominatim helpers
-// ─────────────────────────────────────────────────────────
 const NOM_HEADERS = { 'Accept-Language': 'en', 'User-Agent': 'KisanDirect-MVP/1.0' };
 
-// Format Nominatim address — deduplicates repeated parts (e.g. "Lucknow, Lucknow")
 const fmtNomAddress = (addr = {}) => {
   const parts = [
     addr.village || addr.town || addr.city_district || addr.city || addr.suburb,
     addr.county  || addr.district || addr.state_district,
     addr.state,
   ].filter(Boolean);
-  // Remove consecutive duplicates (case-insensitive)
   const seen = new Set();
   return parts.filter(p => {
     const k = p.trim().toLowerCase();
@@ -479,9 +471,6 @@ async function reverseGeocode(lat, lng) {
   } catch { return ''; }
 }
 
-// ─────────────────────────────────────────────────────────
-// MapModal — fullscreen Swiggy-style map picker
-// ─────────────────────────────────────────────────────────
 function MapModal({ initialAddress, onConfirm, onClose }) {
   const mapDivRef  = useRef(null);
   const mapRef     = useRef(null);
@@ -501,7 +490,6 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
   const CITY_ZOOM  = 13;
   const INDIA_ZOOM = 5;
 
-  // Init Leaflet map
   useEffect(() => {
     if (!mapDivRef.current || mapRef.current) return;
 
@@ -515,10 +503,9 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
       maxZoom: 19,
     }).addTo(map);
 
-    // Only reverse geocode when user has zoomed in to a meaningful level
     map.on('moveend', () => {
       const zoom = map.getZoom();
-      if (zoom < 11) return;           // too zoomed out — skip
+      if (zoom < 11) return;
       const { lat, lng } = map.getCenter();
       clearTimeout(geocodeRef.current);
       setGeocoding(true);
@@ -538,7 +525,6 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
     };
   }, []);
 
-  // GPS: fly to user's location → moveend fires → geocodes
   const handleGPS = () => {
     if (!navigator.geolocation) { setGpsError('Geolocation not supported.'); return; }
     setGpsLoading(true); setGpsError('');
@@ -552,7 +538,6 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
     );
   };
 
-  // Search (debounced)
   const handleSearch = (e) => {
     const val = e.target.value;
     setSearchQuery(val);
@@ -573,11 +558,9 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
     }, 400);
   };
 
-  // BUG FIX: Set address DIRECTLY from suggestion data, then also fly map there
-  // (Don't rely on moveend reverse geocode which returned wrong village names)
   const selectSuggestion = (item) => {
     const addr = fmtNomAddress(item.address) || item.display_name;
-    setAddress(addr);                  // ← set correct address immediately
+    setAddress(addr);
     setSearchQuery('');
     setSuggestions([]);
     setShowSugg(false);
@@ -588,7 +571,6 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
     <div className="map-overlay" role="dialog" aria-modal="true">
       <div className="map-modal">
 
-        {/* ── Header: search + close ── */}
         <div className="map-header">
           <div className="map-search-row">
             <span className="map-search-ico">🔍</span>
@@ -605,8 +587,6 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
           <button className="map-close-btn" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
-        {/* Search suggestions — IN FLOW (not absolutely positioned)
-            so they NEVER cover or hide the search input above */}
         {showSugg && suggestions.length > 0 && (
           <ul className="map-suggestions">
             {suggestions.map((item) => (
@@ -618,20 +598,17 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
           </ul>
         )}
 
-        {/* ── Map with fixed center pin (Swiggy-style) ── */}
         <div className="map-area-wrap">
           <div ref={mapDivRef} className="map-area" />
           <div className="map-center-pin" aria-hidden="true">
             <div className="map-pin-icon">📍</div>
             <div className="map-pin-dot" />
           </div>
-          {/* Zoom-in hint shown when map is too zoomed out */}
           <div className="map-zoom-hint">
             Zoom in to pick a precise location
           </div>
         </div>
 
-        {/* ── Bottom panel ── */}
         <div className="map-bottom">
           <button
             type="button"
@@ -671,9 +648,6 @@ function MapModal({ initialAddress, onConfirm, onClose }) {
 }
 
 
-// ─────────────────────────────────────────────────────────
-// LocationPicker — trigger button + MapModal
-// ─────────────────────────────────────────────────────────
 function LocationPicker({ value, onChange, placeholder = 'Set your location…' }) {
   const [address,   setAddress]   = useState(value || '');
   const [modalOpen, setModalOpen] = useState(false);
@@ -717,16 +691,12 @@ function LocationPicker({ value, onChange, placeholder = 'Set your location…' 
   );
 }
 
-// ─────────────────────────────────────────────
-// Demo credentials shown on the login banner
-// ─────────────────────────────────────────────
 const DEMO_ACCOUNTS = {
   farmer: { phone: '9999900001', label: 'Demo Farmer', name: 'Ramesh Kumar', location: 'Barabanki, Uttar Pradesh' },
   buyer:  { phone: '9999900002', label: 'Demo Buyer',  name: 'ABC Foods Pvt. Ltd.', location: 'Lucknow, Uttar Pradesh' },
 };
 
 function Welcome({ chooseRole, lang, setLang, tr }) {
-  // step: 'role' | 'phone' | 'otp' | 'profile'
   const [step, setStep]           = useState('role');
   const [loginRole, setLoginRole] = useState('');
   const [phone, setPhone]         = useState('');
@@ -738,7 +708,6 @@ function Welcome({ chooseRole, lang, setLang, tr }) {
   const [profileError, setProfileError] = useState('');
   const timerRef = useRef(null);
 
-  // 60-second resend countdown
   const startCountdown = () => {
     setCountdown(60);
     clearInterval(timerRef.current);
@@ -832,7 +801,6 @@ function Welcome({ chooseRole, lang, setLang, tr }) {
     chooseRole(loginRole, roleData);
   };
 
-  // ─── Shared topbar ────────────────────────────────────────────
   const Topbar = (
     <header className="topbar compact">
       <img src={LOGO} alt="KisanDirect" className="brand-logo" />
@@ -843,7 +811,6 @@ function Welcome({ chooseRole, lang, setLang, tr }) {
     </header>
   );
 
-  // ─── Demo banner — only shows the CURRENT role's demo account ─
   const DemoBanner = loginRole ? (
     <div className="demo-banner">
       <p className="demo-banner-title">🎯 Demo Credentials</p>
@@ -863,7 +830,6 @@ function Welcome({ chooseRole, lang, setLang, tr }) {
     </div>
   ) : null;
 
-  // ─── STEP: ROLE SELECTION ──────────────────────────────────────
   if (step === 'role') {
     return (
       <div className="welcome-screen">
@@ -896,7 +862,6 @@ function Welcome({ chooseRole, lang, setLang, tr }) {
     );
   }
 
-  // ─── STEP: PHONE ENTRY ─────────────────────────────────────────
   if (step === 'phone') {
     return (
       <div className="welcome-screen">
@@ -943,7 +908,6 @@ function Welcome({ chooseRole, lang, setLang, tr }) {
     );
   }
 
-  // ─── STEP: OTP VERIFICATION ────────────────────────────────────
   if (step === 'otp') {
     return (
       <div className="welcome-screen">
@@ -1000,7 +964,6 @@ function Welcome({ chooseRole, lang, setLang, tr }) {
     );
   }
 
-  // ─── STEP: PROFILE INFO ────────────────────────────────────────
   return (
     <div className="welcome-screen">
       {Topbar}
@@ -1824,7 +1787,7 @@ function MandiPage({ tr }) {
   const [market, setMarket] = useState('All');
   const [commodity, setCommodity] = useState('All');
   const [search, setSearch] = useState('');
-  const [unit, setUnit] = useState('kg'); // 'kg' or 'quintal'
+  const [unit, setUnit] = useState('kg');
 
   const loadData = async () => {
     setLoading(true);

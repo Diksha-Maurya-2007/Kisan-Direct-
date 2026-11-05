@@ -1,8 +1,3 @@
-/**
- * Mandi Prices Service (Agmarknet via data.gov.in)
- * Integrates official Government of India Agmarknet live wholesale commodity market price feeds.
- */
-
 const DATA_GOV_API_KEY = (
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_DATA_GOV_API_KEY) ||
   '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b'
@@ -11,7 +6,6 @@ const DATA_GOV_API_KEY = (
 const RESOURCE_ID = '9ef84268-d588-465a-a308-a864a43d0070';
 const BASE_URL = `https://api.data.gov.in/resource/${RESOURCE_ID}`;
 
-// Verified Agmarknet baseline data for seamless offline & rate-limit fallback
 export const FALLBACK_MANDI_RECORDS = [
   {
     state: 'Uttar Pradesh',
@@ -171,9 +165,6 @@ export const FALLBACK_MANDI_RECORDS = [
   }
 ];
 
-/**
- * Normalizes an API record from data.gov.in format
- */
 function normalizeRecord(raw) {
   const minPrice = parseFloat(raw.min_price || raw.minimum || 0);
   const maxPrice = parseFloat(raw.max_price || raw.maximum || 0);
@@ -189,7 +180,6 @@ function normalizeRecord(raw) {
     min_price: minPrice,
     max_price: maxPrice,
     modal_price: modalPrice,
-    // Calculated Rs per Kg values (1 Quintal = 100 Kg)
     min_per_kg: Math.round((minPrice / 100) * 10) / 10,
     max_per_kg: Math.round((maxPrice / 100) * 10) / 10,
     modal_per_kg: Math.round((modalPrice / 100) * 10) / 10,
@@ -198,10 +188,6 @@ function normalizeRecord(raw) {
   };
 }
 
-/**
- * Fetches Live Mandi Prices from data.gov.in Agmarknet API
- * With graceful caching and fallback.
- */
 export async function fetchLiveMandiPrices(options = {}) {
   const {
     state = 'Uttar Pradesh',
@@ -236,7 +222,6 @@ export async function fetchLiveMandiPrices(options = {}) {
       const data = await res.json();
       if (Array.isArray(data.records) && data.records.length > 0) {
         const records = data.records.map(normalizeRecord);
-        // Cache successful response
         try {
           localStorage.setItem('kd_mandi_cache', JSON.stringify({
             records,
@@ -258,10 +243,8 @@ export async function fetchLiveMandiPrices(options = {}) {
     console.info('data.gov.in live fetch notice (fallback active):', err.message);
   }
 
-  // Fallback / Cached data
   let fallbackList = [...FALLBACK_MANDI_RECORDS].map(normalizeRecord);
 
-  // Filter fallback records by selected criteria
   if (state && state !== 'All') {
     const stateFiltered = fallbackList.filter(
       (r) => r.state.toLowerCase() === state.toLowerCase()

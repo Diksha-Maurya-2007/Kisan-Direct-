@@ -26,17 +26,12 @@ function initSupabase() {
   }
 }
 
-// Supabase client instance (initialized safely)
 export const supabase = initSupabase();
 
 export const isSupabaseConfigured = Boolean(supabase);
 
-// Demo mode OTP
 export const DEMO_OTP = '1234';
 
-/**
- * Convert a base64 Data URL to a Blob
- */
 export function dataURLtoBlob(dataUrl) {
   try {
     const arr = dataUrl.split(',');
@@ -54,20 +49,11 @@ export function dataURLtoBlob(dataUrl) {
   }
 }
 
-/**
- * Upload an image (File, Blob, or base64 data URL) to Supabase Storage.
- *
- * @param {File | Blob | string} imageInput - File, Blob, or base64 Data URL
- * @param {string} [bucket] - Target Supabase bucket name
- * @param {string} [folder='crops'] - Folder prefix inside bucket
- * @returns {Promise<{ url: string, path: string | null, isRemote: boolean, error: any }>}
- */
 export async function uploadCropImage(imageInput, bucket = SUPABASE_BUCKET, folder = 'crops') {
   if (!imageInput) {
     return { url: '', path: null, isRemote: false, error: new Error('No image provided') };
   }
 
-  // If Supabase is not configured, fallback gracefully to base64 Data URL
   if (!isSupabaseConfigured || !supabase) {
     const fallbackUrl = typeof imageInput === 'string'
       ? imageInput
@@ -90,7 +76,6 @@ export async function uploadCropImage(imageInput, bucket = SUPABASE_BUCKET, fold
         const match = imageInput.match(/data:image\/([a-zA-Z0-9+]+);/);
         if (match && match[1]) fileExt = match[1] === 'jpeg' ? 'jpg' : match[1];
       } else if (imageInput.startsWith('http://') || imageInput.startsWith('https://')) {
-        // Already a remote URL
         return { url: imageInput, path: null, isRemote: true, error: null };
       } else {
         blob = new Blob([imageInput], { type: 'image/jpeg' });
@@ -122,7 +107,6 @@ export async function uploadCropImage(imageInput, bucket = SUPABASE_BUCKET, fold
       return { url: fallbackUrl, path: null, isRemote: false, error: uploadError };
     }
 
-    // Get public URL
     const { data: urlData } = supabase.storage
       .from(bucket)
       .getPublicUrl(filePath);
@@ -142,9 +126,6 @@ export async function uploadCropImage(imageInput, bucket = SUPABASE_BUCKET, fold
   }
 }
 
-/**
- * Save / Upsert a crop listing to Supabase Database (Table: `listings`)
- */
 export async function saveListingToSupabase(listing) {
   if (!isSupabaseConfigured || !supabase || !listing) return { data: null, error: null };
 
@@ -180,9 +161,6 @@ export async function saveListingToSupabase(listing) {
   }
 }
 
-/**
- * Fetch all listings from Supabase Database (Table: `listings`)
- */
 export async function fetchListingsFromSupabase() {
   if (!isSupabaseConfigured || !supabase) return { data: null, error: null };
 
@@ -197,7 +175,6 @@ export async function fetchListingsFromSupabase() {
       return { data: null, error };
     }
 
-    // Map database snake_case to frontend camelCase
     const formatted = (data || []).map((row) => ({
       id: row.id,
       cropName: row.crop_name || row.cropName || 'Crop',
@@ -219,9 +196,6 @@ export async function fetchListingsFromSupabase() {
   }
 }
 
-/**
- * Delete a listing from Supabase Database
- */
 export async function deleteListingFromSupabase(id) {
   if (!isSupabaseConfigured || !supabase || !id) return { error: null };
 
@@ -241,9 +215,6 @@ export async function deleteListingFromSupabase(id) {
   }
 }
 
-/**
- * Helper to convert File/Blob to base64 Data URL
- */
 function fileToDataUrl(fileOrBlob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

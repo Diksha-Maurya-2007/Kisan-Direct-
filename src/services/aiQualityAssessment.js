@@ -1,13 +1,5 @@
-/**
- * AI Quality Assessment Service for Agricultural Produce
- * Inspects crop images using Google Gemini Vision (with graceful multi-model fallback).
- */
-
 const GEMINI_API_KEY = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY || '').trim();
 
-/**
- * Extracts raw base64 data and mimeType from a data URL or blob/url
- */
 async function getImageBase64(imageInput) {
   if (typeof imageInput === 'string') {
     if (imageInput.startsWith('data:')) {
@@ -58,9 +50,6 @@ const CANDIDATE_MODELS = [
   'gemini-pro-latest'
 ];
 
-/**
- * Assess Crop Quality using Google Gemini Vision API
- */
 async function assessWithGemini(cropName, base64Data, mimeType) {
   if (!GEMINI_API_KEY) return null;
 
@@ -130,9 +119,6 @@ Respond ONLY with a valid JSON object matching this schema:
   return null;
 }
 
-/**
- * Intelligent Fallback Heuristic Assessment
- */
 function getSmartFallback(cropName) {
   const crop = String(cropName || 'Tomato').toLowerCase();
   if (crop.includes('tomato')) {
@@ -185,9 +171,6 @@ function getSmartFallback(cropName) {
   };
 }
 
-/**
- * Main AI Crop Quality Assessment Function
- */
 export async function assessCropQuality(cropName, imageInput) {
   if (!imageInput) {
     return { ...getSmartFallback(cropName), isAiGenerated: false };
